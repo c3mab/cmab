@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMAB | Adversary Intelligence & Offensive Security</title>
+    <style>
+        :root {
+            --bg: #030306;
+            --surface: #0a0a10;
+            --border: #1a1a2e;
+            --text: #f0f0f8;
+            --text-muted: #6a6a8a;
+            --accent: #ff2d78;
+            --accent2: #7c3aed;
+            --accent3: #00d4ff;
+            --success: #00ff88;
+            --neon-pink: #ff006e;
+            --neon-blue: #00f5ff;
+            --neon-purple: #b026ff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        /* Cyberpunk scanline overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,255,255,0.015) 2px,
+                rgba(0,255,255,0.015) 4px
+            );
+            pointer-events: none;
+            z-index: 9999;
+        }
+        #particles {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0; pointer-events: none;
+        }
+        .glow-orb {
+            position: fixed; border-radius: 50%; filter: blur(120px);
+            pointer-events: none; z-index: 0; animation: float 25s ease-in-out infinite;
+        }
+        .glow-orb:nth-child(2) { width: 600px; height: 600px; background: var(--neon-pink); top: -200px; right: -200px; opacity: 0.1; }
+        .glow-orb:nth-child(3) { width: 500px; height: 500px; background: var(--neon-purple); bottom: -150px; left: -150px; opacity: 0.08; animation-delay: -12s; }
+        .glow-orb:nth-child(4) { width: 400px; height: 400px; background: var(--neon-blue); top: 40%; left: 50%; opacity: 0.06; animation-delay: -8s; }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(60px, -40px) scale(1.05); }
+            50% { transform: translate(-40px, 60px) scale(0.95); }
+            75% { transform: translate(40px, 40px) scale(1.02); }
+        }
+        /* Glitch keyframes */
+        @keyframes glitch {
+            0%, 100% { text-shadow: 2px 0 var(--neon-pink), -2px 0 var(--neon-blue); }
+            25% { text-shadow: -2px 0 var(--neon-pink), 2px 0 var(--neon-blue); }
+            50% { text-shadow: 2px 2px var(--neon-pink), -2px -2px var(--neon-blue); }
+            75% { text-shadow: -2px 2px var(--neon-pink), 2px -2px var(--neon-blue); }
+        }
+        @keyframes neon-pulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--accent3), 0 0 20px var(--accent3), 0 0 40px var(--accent3); }
+            50% { opacity: 0.8; text-shadow: 0 0 5px var(--accent3), 0 0 10px var(--accent3), 0 0 20px var(--accent3); }
+        }
+        @keyframes rotate-circle {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes border-glow {
+            0%, 100% { border-color: var(--accent); box-shadow: 0 0 15px rgba(255,45,120,0.3); }
+            33% { border-color: var(--accent2); box-shadow: 0 0 15px rgba(124,58,237,0.3); }
+            66% { border-color: var(--accent3); box-shadow: 0 0 15px rgba(0,212,255,0.3); }
+        }
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            padding: 1rem 2rem; background: rgba(5,5,8,0.85);
+            backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05);
+            z-index: 1000; display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo {
+            font-size: 1.2rem; font-weight: 900; letter-spacing: 4px;
+            background: linear-gradient(135deg, var(--accent), var(--accent3));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            position: relative;
+        }
+        .logo::after {
+            content: 'ADVERSARY INTELLIGENCE';
+            position: absolute;
+            bottom: -12px; left: 50%; transform: translateX(-50%);
+            font-size: 0.45rem; letter-spacing: 3px; font-weight: 500;
+            color: var(--text-muted); white-space: nowrap;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        .hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 8rem 2rem 4rem; position: relative; z-index: 1;
+        }
+        .hero-content { max-width: 950px; text-align: center; }
+        .hero h1 {
+            font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 900;
+            line-height: 1.05; margin-bottom: 2rem; letter-spacing: -2px;
+        }
+        .hero h1 .line1 { display: block; background: linear-gradient(135deg, #fff, #c0c0d8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 .line2 { display: block; background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-subtitle { font-size: clamp(1.1rem, 2vw, 1.35rem); color: var(--text-muted); max-width: 650px; margin: 0 auto 3rem; line-height: 1.8; }
+        .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4rem; }
+        .btn { padding: 1rem 2.5rem; border-radius: 10px; font-size: 1rem; font-weight: 700; text-decoration: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border: none; }
+        .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; box-shadow: 0 4px 25px rgba(255,45,120,0.25); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 35px rgba(255,45,120,0.4); }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        section { padding: 7rem 2rem; position: relative; z-index: 1; }
+        .section-label { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; color: var(--accent); margin-bottom: 1rem; }
+        .section-header { text-align: center; margin-bottom: 5rem; }
+        .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 1.2rem; letter-spacing: -1px; }
+        .section-header p { color: var(--text-muted); max-width: 600px; margin: 0 auto; font-size: 1.1rem; }
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+        .skill-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: all 0.4s; }
+        .skill-card:hover { transform: translateY(-5px); border-color: rgba(255,45,120,0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .skill-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .skill-card p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.7; }
+        .services-section { background: var(--surface); }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1100px; margin: 0 auto; }
+        .service-card { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; transition: all 0.4s; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .service-card h3 { font-size: 1.15rem; margin-bottom: 0.7rem; }
+        .service-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1.2rem; }
+        .service-price { font-size: 1.5rem; font-weight: 800; }
+        .service-price span { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+        .cta-section { text-align: center; padding: 6rem 2rem; }
+        .cta-box { background: linear-gradient(135deg, rgba(255,45,120,0.08), rgba(124,58,237,0.08)); border: 1px solid rgba(255,45,120,0.15); border-radius: 20px; padding: 3rem; max-width: 650px; margin: 0 auto; }
+        .cta-box h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+        .cta-box p { color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem; }
+        footer { padding: 2rem; text-align: center; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; position: relative; z-index: 1; }
+        @media (max-width: 768px) { .nav-links { display: none; } .stats { gap: 1.5rem; } }
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    
+    <nav>
+        <div class="logo">CMAB</div>
+        <ul class="nav-links">
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="projects.html">Portfolio</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="fade-in">
+                <span class="line1">I Think Like Attackers.</span>
+                <span class="line2">So Your Business Doesn't Have To.</span>
+            </h1>
+            <p class="hero-subtitle fade-in">
+                I am <strong style="color:var(--accent);">Saqib Semab</strong> — Security Researcher and Cyber Maturity Specialist at <strong style="color:var(--accent3);">Resecurity</strong>®. I integrate red teaming into cyber defenses through adversary-driven testing. I optimize threat operations, improve process maturity, and deliver proactive security that helps organizations reduce risk, enhance resilience, and stay ahead of emerging threats.
+            </p>
+            <div class="hero-cta fade-in">
+                <a href="#projects" class="btn btn-primary">View My Work →</a>
+                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+            </div>
+            <div class="stats fade-in">
+                <div class="stat-item">
+                    <div class="stat-number">13+</div>
+                    <div class="stat-label">Ransomware Reports</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">17+</div>
+                    <div class="stat-label">Threat Actor Profiles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">430K+</div>
+                    <div class="stat-label">Devices Analyzed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">Certifications</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="skills">
+        <div class="section-header fade-in">
+            <div class="section-label">// CAPABILITIES</div>
+            <h2>What I Do</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:2rem;">McAfee CCII | CMMI Certified | Core Red Team Operator</p>
+        </div>
+        <div class="skills-grid">
+            <div class="skill-card fade-in">
+                <h3>🕵️ OSINT Investigation</h3>
+                <p>Email tracing. Username correlation across 100+ platforms. Domain infrastructure mapping. Dark web exposure monitoring.</p>
+            </div>
+            <div class="skill-card fade-in">
+                <h3>🦠 Ransomware Intelligence</h3>
+                <p>Real-time tracking of active ransomware groups. Ransom note analysis. IOC extraction and attribution. 50+ threat actors tracked.</p>
+            </div>
+            <div class="skill-card fade-in">
+                <h3>🔐 Penetration Testing</h3>
+                <p>Web app security. API testing. WordPress infrastructure audits. Finding vulns that scanners miss.</p>
+            </div>
+            <div class="skill-card fade-in">
+                <h3>🛡️ EDR Evasion Research</h3>
+                <p>Hypervisor-level security. Blue-pill architecture. EPT hooking and PatchGuard bypass techniques.</p>
+            </div>
+            <div class="skill-card fade-in">
+                <h3>📊 CTI Report Writing</h3>
+                <p>Professional threat intelligence reports. MITRE ATT&CK mapping. YARA/Sigma rules. Actionable recommendations.</p>
+            </div>
+            <div class="skill-card fade-in">
+                <h3>🔧 Tool Development</h3>
+                <p>Custom Python tools for OSINT, credential hunting, and automated report generation. Built for real operations.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section id="services" class="services-section">
+        <div class="section-header fade-in">
+            <div class="section-label">// SERVICES</div>
+            <h2>How I Can Help</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card fade-in">
+                <h3>🔍 OSINT Investigation</h3>
+                <p>Complete digital footprint analysis for any target — email, username, domain, phone.</p>
+                <div class="service-price">$150 <span>/ starting</span></div>
+            </div>
+            <div class="service-card fade-in">
+                <h3>📋 Threat Intelligence Report</h3>
+                <p>Comprehensive threat landscape analysis with IOCs, MITRE mapping, and recommendations.</p>
+                <div class="service-price">$500 <span>/ starting</span></div>
+            </div>
+            <div class="service-card fade-in">
+                <h3>🔒 WordPress Security Audit</h3>
+                <p>Automated + manual security assessment of WordPress infrastructure.</p>
+                <div class="service-price">$200 <span>/ starting</span></div>
+            </div>
+            <div class="service-card fade-in">
+                <h3>🦠 Ransomware Analysis</h3>
+                <p>Incident response support. Ransom note analysis. IOC compilation. Attribution.</p>
+                <div class="service-price">$300 <span>/ starting</span></div>
+            </div>
+            <div class="service-card fade-in">
+                <h3>🌐 Domain/IP Investigation</h3>
+                <p>WHOIS history. DNS enumeration. Subdomain takeover assessment. Infrastructure mapping.</p>
+                <div class="service-price">$100 <span>/ starting</span></div>
+            </div>
+            <div class="service-card fade-in">
+                <h3>📡 Ongoing Threat Monitoring</h3>
+                <p>Monthly threat intelligence briefings. Dark web monitoring. Early warning system.</p>
+                <div class="service-price">$800 <span>/ month</span></div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="cta-section">
+        <div class="cta-box fade-in">
+            <div class="section-label">// LET'S TALK</div>
+            <h2>Ready to Stop Guessing?</h2>
+            <p>Every day without proper threat intelligence is a gamble. Let's change that.</p>
+            <div class="hero-cta">
+                <a href="mailto:seemab@protonmail.com" class="btn btn-primary">Book Free Consultation →</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>© 2026 CMAB — McAfee CCII | CMMI Certified</p>
+    </footer>
+    
+    <script>
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const particles = [];
+        for (let i = 0; i < 40; i++) {
+            particles.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4, size: Math.random()*2+0.5, opacity: Math.random()*0.4+0.1 });
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255,45,120,${p.opacity})`; ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
