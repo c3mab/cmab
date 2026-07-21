@@ -81,9 +81,22 @@ nav {
     border-bottom: 1px solid rgba(255,255,255,0.05);
     z-index: 1000;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     transition: all 0.3s;
+}
+
+/* Signature wordmark, pinned top-left */
+.logo {
+    display: block;
+    line-height: 0;
+    text-decoration: none;
+}
+.logo-img {
+    display: block;
+    height: clamp(34px, 5vw, 52px);
+    width: auto;
+    mix-blend-mode: screen;
 }
 nav.scrolled {
     padding: 0.7rem 2rem;
