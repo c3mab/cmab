@@ -114,6 +114,40 @@ window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 if (toTop) toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
+/* ============ MOBILE NAV TOGGLE ============ */
+(function () {
+    const navToggle = document.getElementById('navToggle');
+    const navBackdrop = document.getElementById('navBackdrop');
+    if (!nav || !navToggle) return;
+
+    function openMenu() {
+        nav.classList.add('nav-open');
+        navToggle.setAttribute('aria-expanded', 'true');
+        if (navBackdrop) {
+            navBackdrop.classList.add('show');
+            requestAnimationFrame(() => navBackdrop.classList.add('visible'));
+        }
+        document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+        nav.classList.remove('nav-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+        if (navBackdrop) {
+            navBackdrop.classList.remove('visible');
+            setTimeout(() => navBackdrop.classList.remove('show'), 350);
+        }
+        document.body.style.overflow = '';
+    }
+
+    navToggle.addEventListener('click', () => {
+        nav.classList.contains('nav-open') ? closeMenu() : openMenu();
+    });
+    if (navBackdrop) navBackdrop.addEventListener('click', closeMenu);
+    document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', closeMenu));
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 768) closeMenu(); });
+})();
+
 /* ============ SCROLL REVEAL + STAGGER ============ */
 const revealSel = '.fade-in, .reveal-left, .reveal-right, .reveal-scale, .stagger, .section-header, .testimonial-card, .cta-box';
 const observer = new IntersectionObserver((entries) => {
