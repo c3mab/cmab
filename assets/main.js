@@ -174,12 +174,14 @@ if (toTop) toTop.addEventListener('click', () => window.scrollTo({ top: 0, behav
 /* ============ MOBILE NAV TOGGLE ============ */
 (function () {
     const navToggle = document.getElementById('navToggle');
+    const navToggleTxt = navToggle ? navToggle.querySelector('.nav-toggle-txt') : null;
     const navBackdrop = document.getElementById('navBackdrop');
     if (!nav || !navToggle) return;
 
     function openMenu() {
         nav.classList.add('nav-open');
         navToggle.setAttribute('aria-expanded', 'true');
+        if (navToggleTxt) navToggleTxt.textContent = 'Close';
         if (navBackdrop) {
             navBackdrop.classList.add('show');
             requestAnimationFrame(() => navBackdrop.classList.add('visible'));
@@ -189,6 +191,7 @@ if (toTop) toTop.addEventListener('click', () => window.scrollTo({ top: 0, behav
     function closeMenu() {
         nav.classList.remove('nav-open');
         navToggle.setAttribute('aria-expanded', 'false');
+        if (navToggleTxt) navToggleTxt.textContent = 'Menu';
         if (navBackdrop) {
             navBackdrop.classList.remove('visible');
             setTimeout(() => navBackdrop.classList.remove('show'), 350);
