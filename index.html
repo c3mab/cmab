@@ -1565,6 +1565,196 @@
         }
         .logo:hover::after { border-color: rgba(255,45,120,0.35); }
 
+        /* ============================================================
+           SUPER DUPER MOTION LAYER — cursor spotlight, tilt everywhere,
+           breathing glows, list cascades, ripples, neon flicker, data-scan
+           ============================================================ */
+
+        /* Nav links drop in on load */
+        .nav-links li {
+            opacity: 0;
+            transform: translateY(-8px);
+            animation: dropIn 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        .nav-links li:nth-child(1){animation-delay:.05s}
+        .nav-links li:nth-child(2){animation-delay:.10s}
+        .nav-links li:nth-child(3){animation-delay:.15s}
+        .nav-links li:nth-child(4){animation-delay:.20s}
+        .nav-links li:nth-child(5){animation-delay:.25s}
+        .nav-links li:nth-child(6){animation-delay:.30s}
+        .nav-links li:nth-child(7){animation-delay:.35s}
+        .nav-links li:nth-child(8){animation-delay:.40s}
+
+        /* Global cursor spotlight — neon flashlight tracking the pointer */
+        #cursorGlow {
+            position: fixed;
+            top: 0; left: 0;
+            width: 480px; height: 480px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,45,120,0.10), rgba(0,212,255,0.06) 40%, transparent 70%);
+            pointer-events: none;
+            z-index: 2;
+            mix-blend-mode: screen;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            will-change: transform;
+        }
+        #cursorGlow.on { opacity: 1; }
+
+        /* Data-scan sweep — a faint neon bar drifting across the whole page */
+        .data-scan {
+            position: fixed;
+            top: 0; left: -20%;
+            width: 20%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,212,255,0.05), rgba(255,45,120,0.04), transparent);
+            pointer-events: none;
+            z-index: 1;
+            animation: dataScan 14s linear infinite;
+        }
+        @keyframes dataScan { to { left: 120%; } }
+
+        /* Button click ripple */
+        .btn-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: scale(0);
+            animation: rippleOut 0.7s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes rippleOut { to { transform: scale(1); opacity: 0; } }
+
+        /* Mouse-follow spotlight, extended to red-team + evidence cards */
+        .rt-col, .ev-card, .rt-eng {
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .rt-col > *, .ev-card > *, .rt-eng > * { position: relative; z-index: 1; }
+        .rt-col::after, .ev-card::after, .rt-eng::after {
+            content: '';
+            position: absolute; inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(280px circle at var(--mx,50%) var(--my,50%), rgba(0,212,255,0.10), transparent 45%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .rt-col:hover::after, .ev-card:hover::after, .rt-eng:hover::after { opacity: 1; }
+
+        /* Scanning highlight sweeping along the rt-col top bar */
+        .rt-col::before {
+            background-size: 200% 100%;
+            animation: barScan 4s linear infinite;
+        }
+        @keyframes barScan { 0% { background-position: 0% 0; } 100% { background-position: -200% 0; } }
+
+        /* Ambient breathing border-glow on flagship containers */
+        .case-file { transform-style: preserve-3d; }
+        @keyframes borderBreathe {
+            0%, 100% { box-shadow: 0 30px 70px rgba(0,0,0,0.5), 0 0 0 rgba(255,45,120,0); }
+            50%      { box-shadow: 0 30px 70px rgba(0,0,0,0.5), 0 0 40px rgba(255,45,120,0.18); }
+        }
+        .case-file.visible { animation: borderBreathe 6s ease-in-out infinite; }
+        @keyframes rtGlow {
+            0%, 100% { border-color: var(--border); }
+            50% { border-color: rgba(255,45,120,0.35); }
+        }
+        @keyframes rtGlowAi {
+            0%, 100% { border-color: var(--border); }
+            50% { border-color: rgba(0,212,255,0.35); }
+        }
+        .redteam-grid.visible .rt-col { animation: rtGlow 5s ease-in-out infinite; }
+        .redteam-grid.visible .rt-col.ai { animation-name: rtGlowAi; }
+
+        /* Badge / tag pulses */
+        @keyframes tagPulse {
+            0%, 100% { box-shadow: 0 0 0 rgba(255,45,120,0); }
+            50% { box-shadow: 0 0 10px rgba(255,45,120,0.3); }
+        }
+        .rt-frameworks .fw { animation: tagPulse 3.5s ease-in-out infinite; }
+        .rt-frameworks .fw:nth-child(2) { animation-delay: 0.4s; }
+        .rt-frameworks .fw:nth-child(3) { animation-delay: 0.8s; }
+        .rt-frameworks .fw:nth-child(4) { animation-delay: 1.2s; }
+        .case-role-badge { animation: tagPulse 4s ease-in-out infinite; }
+
+        /* Featured-service badge float (keyframe already existed, now put to work) */
+        .service-card.featured::before { animation: badgeFloat 2.5s ease-in-out infinite; }
+
+        /* List cascades, extended beyond problem-box to the red-team lists & case chain */
+        .redteam-grid.visible .rt-list li { animation: liSlide 0.5s cubic-bezier(0.16,1,0.3,1) backwards; }
+        .redteam-grid.visible .rt-list li:nth-child(1){animation-delay:.08s}
+        .redteam-grid.visible .rt-list li:nth-child(2){animation-delay:.16s}
+        .redteam-grid.visible .rt-list li:nth-child(3){animation-delay:.24s}
+        .redteam-grid.visible .rt-list li:nth-child(4){animation-delay:.32s}
+        .redteam-grid.visible .rt-list li:nth-child(5){animation-delay:.40s}
+        .redteam-grid.visible .rt-list li:nth-child(6){animation-delay:.48s}
+
+        .case-chain.visible li { animation: liSlide 0.55s cubic-bezier(0.16,1,0.3,1) backwards; }
+        .case-chain.visible li:nth-child(1){animation-delay:.10s}
+        .case-chain.visible li:nth-child(2){animation-delay:.25s}
+        .case-chain.visible li:nth-child(3){animation-delay:.40s}
+        .case-chain.visible li:nth-child(4){animation-delay:.55s}
+        .case-chain.visible li:nth-child(5){animation-delay:.70s}
+        @keyframes dotPulse {
+            0%, 100% { box-shadow: 0 0 10px var(--accent); }
+            50%      { box-shadow: 0 0 18px var(--accent), 0 0 28px rgba(255,45,120,0.5); }
+        }
+        .case-chain.visible li::before { animation: dotPulse 2.4s ease-in-out infinite; }
+        .case-chain.visible li:nth-child(2)::before { animation-delay: 0.3s; }
+        .case-chain.visible li:nth-child(3)::before { animation-delay: 0.6s; }
+        .case-chain.visible li:nth-child(4)::before { animation-delay: 0.9s; }
+        .case-chain.visible li:nth-child(5)::before { animation-delay: 1.2s; }
+
+        /* Cascading flip-up entrance, extended to the remaining card grids */
+        .redteam-grid.visible .rt-col,
+        .redteam-engagements.visible .rt-eng,
+        .evidence-strip.visible .ev-card {
+            animation: cardFlipUp 0.7s cubic-bezier(0.16,1,0.3,1) backwards;
+        }
+        .redteam-grid.visible .rt-col:nth-child(2) { animation-delay: 0.1s; }
+        .redteam-engagements.visible .rt-eng:nth-child(1){animation-delay:.05s}
+        .redteam-engagements.visible .rt-eng:nth-child(2){animation-delay:.13s}
+        .redteam-engagements.visible .rt-eng:nth-child(3){animation-delay:.21s}
+        .redteam-engagements.visible .rt-eng:nth-child(4){animation-delay:.29s}
+        .evidence-strip.visible .ev-card:nth-child(1){animation-delay:.05s}
+        .evidence-strip.visible .ev-card:nth-child(2){animation-delay:.15s}
+        .evidence-strip.visible .ev-card:nth-child(3){animation-delay:.25s}
+
+        /* Heading glitch-flicker on hover, chromatic-split cyberpunk edition */
+        .rt-col h3, .ev-card h4, .case-head h3, .skill-card h3, .service-card h3 {
+            transition: text-shadow 0.2s ease;
+        }
+        .rt-col h3:hover, .ev-card h4:hover, .case-head h3:hover,
+        .skill-card h3:hover, .service-card h3:hover {
+            animation: labelGlitch 0.4s steps(2) 1;
+        }
+
+        /* Occasional neon glitch blip on the logo — cyberpunk identity flicker */
+        .logo { animation: gradientShift 6s linear infinite, logoGlitch 8s ease-in-out infinite; }
+        @keyframes logoGlitch {
+            0%, 94%, 100% { text-shadow: none; transform: translateX(0); }
+            95% { text-shadow: 2px 0 var(--accent3), -2px 0 var(--accent); transform: translateX(-1px); }
+            96% { text-shadow: -2px 0 var(--accent3), 2px 0 var(--accent); transform: translateX(1px); }
+            97% { text-shadow: none; transform: translateX(0); }
+        }
+
+        /* Neon power-up flicker on the hero's second headline */
+        .hero h1 .line2 {
+            animation: heroReveal 0.9s cubic-bezier(0.16,1,0.3,1) 0.3s both,
+                       gradientShift 8s ease 1.2s infinite,
+                       neonPowerUp 1.4s steps(1) 1.1s both;
+        }
+        @keyframes neonPowerUp {
+            0%, 100% { opacity: 1; filter: none; }
+            8% { opacity: 0.35; }
+            16% { opacity: 1; }
+            22% { opacity: 0.5; filter: brightness(1.6); }
+            28% { opacity: 1; filter: none; }
+            60% { opacity: 0.7; }
+            65% { opacity: 1; }
+        }
+
         /* Respect reduced motion */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
@@ -1582,11 +1772,14 @@
                 animation: none !important;
             }
             .cyber-grid { animation: none !important; }
+            .nav-links li { opacity: 1 !important; transform: none !important; animation: none !important; }
+            #cursorGlow, .btn-ripple, .data-scan { display: none !important; }
         }
     </style>
 </head>
 <body>
     <div class="cyber-grid"></div>
+    <div class="data-scan"></div>
     <div class="scroll-progress" id="scrollProgress"></div>
     <button id="toTop" aria-label="Back to top">↑</button>
     <canvas id="particles"></canvas>
@@ -1803,7 +1996,7 @@
                             <div class="case-classification">// RaaS Infrastructure Compromise · Resecurity HUNTER</div>
                             <h3>We Broke Into the Ransomware Crew <span class="hl">Before They Could Break You.</span></h3>
                         </div>
-                        <div class="case-aliases">
+                        <div class="case-aliases stagger">
                             <span class="lbl">Known Aliases</span>
                             <span class="alias">BlackLock</span>
                             <span class="alias">El Dorado</span>
@@ -1820,7 +2013,7 @@
 
                     <p class="case-narr">Access changed the mission from watching to intercepting. The team pulled over <strong>7 TB of stolen data</strong> and warned victims before their information ever went public — reaching the <strong>Canadian Centre for Cyber Security 13 days</strong> ahead of one planned leak, and <strong>CERT-FR/ANSSI two days</strong> ahead of a European legal provider's client data going live. By March, BlackLock and Mamona were offline and the operator had vanished.</p>
 
-                    <div class="case-metrics">
+                    <div class="case-metrics stagger">
                         <div class="case-metric"><div class="n">7&nbsp;TB</div><div class="l">Stolen data recovered from actor infrastructure</div></div>
                         <div class="case-metric cyan"><div class="n">13&nbsp;days</div><div class="l">Advance warning to national CERT before publication</div></div>
                         <div class="case-metric"><div class="n">1,425%</div><div class="l">Quarterly leak growth — halted</div></div>
@@ -1828,7 +2021,7 @@
                     </div>
 
                     <div class="case-chain-label">// Operation Timeline</div>
-                    <ul class="case-chain">
+                    <ul class="case-chain stagger">
                         <li>
                             <div class="step-t">Vulnerability Discovery</div>
                             <div class="step-d">LFI flaw identified in BlackLock's TOR-hosted data-leak site during the winter holiday window.</div>
@@ -2159,7 +2352,7 @@
 
         /* ============ 3D TILT ON CARDS ============ */
         if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
-            document.querySelectorAll('.skill-card, .service-card').forEach(card => {
+            document.querySelectorAll('.skill-card, .service-card, .rt-col, .ev-card, .rt-eng').forEach(card => {
                 card.addEventListener('mousemove', e => {
                     const r = card.getBoundingClientRect();
                     const rx = (e.clientX - r.left) / r.width;
@@ -2187,6 +2380,36 @@
                     btn.style.transform = `translate(${mx * 0.18}px, ${my * 0.28}px) translateY(-3px)`;
                 });
                 btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+            });
+        }
+
+        /* ============ GLOBAL CURSOR SPOTLIGHT ============ */
+        if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+            const glow = document.createElement('div');
+            glow.id = 'cursorGlow';
+            document.body.appendChild(glow);
+            let glowOn = false;
+            window.addEventListener('mousemove', e => {
+                glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+                if (!glowOn) { glow.classList.add('on'); glowOn = true; }
+            }, { passive: true });
+            window.addEventListener('mouseout', () => { glow.classList.remove('on'); glowOn = false; });
+        }
+
+        /* ============ BUTTON CLICK RIPPLE ============ */
+        if (!reduceMotion) {
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    const r = btn.getBoundingClientRect();
+                    const ripple = document.createElement('span');
+                    ripple.className = 'btn-ripple';
+                    const size = Math.max(r.width, r.height) * 1.6;
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = (e.clientX - r.left - size / 2) + 'px';
+                    ripple.style.top = (e.clientY - r.top - size / 2) + 'px';
+                    btn.appendChild(ripple);
+                    ripple.addEventListener('animationend', () => ripple.remove());
+                });
             });
         }
 
