@@ -85,13 +85,13 @@
 
     <section id="evidence" class="evidence-section">
         <div class="evidence-wrap">
-            <!-- FLAGSHIP CASE: FortiBleed -->
+            <!-- FLAGSHIP CASE: Global Credential-Harvesting Campaign -->
             <div class="case-file reveal-scale">
                 <div class="case-bar">
                     <span class="dot r"></span>
                     <span class="dot y"></span>
                     <span class="dot g"></span>
-                    <span class="title">cmab@secops: ~/operations/fortibleed.case</span>
+                    <span class="title">cmab@secops: ~/operations/credential-harvest.case</span>
                     <span class="status">● Documented</span>
                 </div>
                 <div class="case-body">
@@ -225,9 +225,9 @@
                     <p>Full investigation of the Black X hacker group's claimed leak of ANC data — <strong>2.3 million records</strong> spanning phone IDs, emails, and physical addresses. Findings cross-verified through MyBroadband, Daily Maverick, BizNews, and DeXpose.io.</p>
                 </div>
                 <div class="ev-card" data-cursor="Read">
-                    <div class="ev-tag">// Bug Bounty · Vulnerability Research</div>
-                    <h4>GitLab Vulnerability Assessment</h4>
-                    <p>Disclosed under AMRSEC-BB-2026-001 — a documented finding against GitLab with a working proof-of-concept and remediation guidance, the kind of report that gets triaged fast because it doesn't leave the reader guessing.</p>
+                    <div class="ev-tag">// Bug Bounty · GitLab.com via HackerOne · Report C2MAB-06</div>
+                    <h4>An Unpatched Sibling of a CVE GitLab Had Already Fixed</h4>
+                    <p>GitLab shipped a fix for an ambiguous branch/tag reference bug (CVE-2025-12506) in three places — web UI, Archive API, GraphQL. I found two REST endpoints, Repository Files and Compare, where that same fix never landed, silently resolving to an attacker-controlled tag instead. <strong>Live-verified against production</strong> with real branch/tag collisions, not just source review — currently under coordinated disclosure.</p>
                 </div>
             </div>
         </div>

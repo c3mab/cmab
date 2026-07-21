@@ -418,6 +418,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 16px;
+    align-items: start;
   }
 
   /* CARD */
@@ -633,7 +634,7 @@
     border: 1px solid var(--border);
     border-left: 3px solid var(--purple);
     border-radius: 3px;
-    padding: 10px 14px;
+    padding: 10px 76px 10px 14px;
     font-family: 'Share Tech Mono', monospace;
     font-size: 11px;
     color: var(--cyan);
@@ -1752,6 +1753,10 @@ document.getElementById('search').addEventListener('input', (e) => {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 updateCounts();
 render();
+
+if (window.innerWidth < 480) {
+  document.getElementById('search').placeholder = 'Search...';
+}
 </script>
 </body>
 </html>
