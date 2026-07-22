@@ -1086,17 +1086,34 @@ section {
     border-color: var(--a, var(--border));
 }
 
-.service-card.featured::before {
-    content: 'POPULAR';
+.service-card[data-badge]::before {
+    content: attr(data-badge);
     position: absolute;
     top: -10px; right: 20px;
     padding: 0.3rem 0.8rem;
-    background: var(--accent);
-    color: white;
+    background: linear-gradient(135deg, var(--a, var(--accent)), var(--b, var(--accent2)));
+    color: #04040a;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+
+.svc-card-level {
+    display: inline-block;
+    margin-bottom: 0.9rem;
+    padding: 0.25rem 0.7rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-family: var(--mono);
     font-size: 0.65rem;
     font-weight: 700;
+    color: var(--a, var(--accent));
+    text-transform: uppercase;
     letter-spacing: 1px;
-    border-radius: 20px;
 }
 
 .service-card .svc-card-bar {
@@ -2102,7 +2119,7 @@ nav.nav-open .nav-toggle-box { transform: rotate(45deg) scale(1.2); border-radiu
 .case-role-badge { animation: tagPulse 4s ease-in-out infinite; }
 
 /* Featured-service badge float (keyframe already existed, now put to work) */
-.service-card.featured::before { animation: badgeFloat 2.5s ease-in-out infinite; }
+.service-card[data-badge]::before { animation: badgeFloat 2.5s ease-in-out infinite; }
 
 /* List cascades, extended beyond problem-box to the red-team lists & case chain */
 .redteam-grid.visible .rt-list li { animation: liSlide 0.5s cubic-bezier(0.16,1,0.3,1) backwards; }
