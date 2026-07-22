@@ -1339,6 +1339,12 @@ section {
     .mood-split { grid-template-columns: 1fr; margin-top: 3rem; }
 }
 
+.mood-solo {
+    max-width: 900px;
+    margin: 3.5rem auto 0;
+    padding: 0 2rem;
+}
+
 .svc-visual {
     max-width: 300px;
     margin: 0 auto 2rem;
@@ -2043,19 +2049,32 @@ nav.nav-open .nav-toggle-box { transform: rotate(45deg) scale(1.2); border-radiu
 .hero h1::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.14) 50%, transparent 60%);
-    background-size: 250% 100%;
-    background-position: 180% 0;
+    top: 0;
+    left: -35%;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.14), transparent);
     pointer-events: none;
+    opacity: 0;
     animation: headlineSweep 2.6s ease 1.2s;
 }
 @keyframes headlineSweep {
-    to { background-position: -80% 0; }
+    0% { transform: translateX(0); opacity: 0; }
+    12% { opacity: 1; }
+    88% { opacity: 1; }
+    100% { transform: translateX(450%); opacity: 0; }
 }
 
 /* Stat numbers pulse once when counted */
 .stat-num { transition: text-shadow 0.4s ease; }
+.stats-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+    gap: 2rem;
+    max-width: 1080px;
+    margin: 0 auto;
+    text-align: center;
+}
 .stats-strip.visible .stat-num {
     animation: statPop 0.6s cubic-bezier(0.34,1.56,0.64,1) 1.2s backwards;
 }
@@ -2347,6 +2366,46 @@ nav.nav-open .nav-toggle-box { transform: rotate(45deg) scale(1.2); border-radiu
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
+}
+
+/* ============================================================
+   LARGE-SCREEN OPTIMIZATION — richer scale on big monitors
+   ============================================================ */
+@media (min-width: 1440px) {
+    section { padding: 8rem 3rem; }
+    .hero { padding: 9rem 3rem 8rem; }
+    .hero.page-hero { padding: 10rem 3rem 4rem; }
+
+    .hero h1 { font-size: clamp(3rem, 4.2vw, 5.6rem); }
+    .hero-subtitle { max-width: 740px; font-size: clamp(1.15rem, 1.3vw, 1.5rem); }
+    .hero-content { max-width: 1100px; }
+    .flagship { max-width: 1040px; }
+    .flagship h2 { font-size: clamp(2rem, 3.2vw, 3.3rem); }
+    .redteam-intro { max-width: 800px; }
+    .redteam-grid { max-width: 1300px; }
+    .redteam-engagements { max-width: 1300px; }
+    .evidence-wrap { max-width: 1300px; }
+    .problem-grid { max-width: 1240px; }
+    .stats-strip { max-width: 1300px; }
+    .section-header h2 { font-size: clamp(2rem, 2.6vw, 3.1rem); }
+    .section-header p { max-width: 680px; }
+    .skills-grid { max-width: 1360px; }
+    .services-grid { max-width: 1360px; }
+    .svc-jump { max-width: 1100px; }
+    .svc-detail { max-width: 900px; }
+    .mood-split { max-width: 1360px; }
+    .mood-solo { max-width: 1000px; }
+    .testimonial-card { max-width: 880px; }
+    .cta-box { max-width: 780px; }
+    .footer-top { max-width: 1360px; }
+    .credentials-strip { max-width: 1000px; }
+}
+
+@media (min-width: 1800px) {
+    .hero-content { max-width: 1220px; }
+    .redteam-grid, .redteam-engagements, .evidence-wrap, .skills-grid,
+    .services-grid, .mood-split, .footer-top, .stats-strip { max-width: 1440px; }
+    .svc-detail { max-width: 960px; }
 }
 
 /* Respect reduced motion */
