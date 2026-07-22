@@ -1339,6 +1339,12 @@ section {
     .mood-split { grid-template-columns: 1fr; margin-top: 3rem; }
 }
 
+.mood-solo {
+    max-width: 900px;
+    margin: 3.5rem auto 0;
+    padding: 0 2rem;
+}
+
 .svc-visual {
     max-width: 300px;
     margin: 0 auto 2rem;
